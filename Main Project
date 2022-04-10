@@ -1,0 +1,284 @@
+import sys, time, os
+from cryptography.fernet import Fernet
+def sPrint(str):
+  for letter in str:
+    sys.stdout.write(letter)
+    sys.stdout.flush()
+    time.sleep(.1)
+def clear():
+    command = 'clear'
+    if os.name in ('nt', 'dos'):
+        command = 'cls'
+    os.system(command)
+def bar_print(str):
+  sys.stdout.write(str)
+  sys.stdout.flush()
+opening = True
+save_code_entering = False
+main = False
+nut_today = False
+overall_nut = False
+input_nut = False
+closing = False
+exiting = False
+username = ""
+today_calories = 0
+today_protein = 0
+today_carbs = 0
+today_fats = 0
+today_calories_done = False
+today_protein_done = False
+today_carbs_done = False
+today_fats_done = False
+streak = 0
+today_streak_checked = False
+while opening:
+  while True:
+    sPrint("Is this your first time using Nutri-Helper? (yes/no)\n")
+    input1 = str(input(">"))
+    if input1 == "yes":
+      first_time = True
+      break
+    elif input1 == "no":
+      first_time = False
+      break
+    else:
+      clear()
+      sPrint("Please enter yes or no.")
+      time.sleep(0.5)
+      clear()
+  
+  if first_time == True:
+    sPrint("Welcome to Nutri-Helper!")
+    time.sleep(1)
+    clear()
+    sPrint("Please enter a username.\n")
+    username = str(input(">"))
+    clear()
+    sPrint("Hello " + username + "!\n")
+    opening = False
+    time.sleep(1)
+  else:
+    sPrint("Welcome back to Nutri-Helper!\n")
+    time.sleep(1)
+    sPrint("Please choose an option.\n")
+    print("<1> Enter a save code")
+    print("<2> Go back")
+    while True:
+      input2 = int(input(">"))
+      if input2 == 1:
+        save_code_entering = True
+        opening = False
+        break
+      elif input2 == 2:
+        break
+      else:
+        sPrint("Please enter 1 or 2.")
+while save_code_entering:
+  sPrint("Please enter your save code:\n")
+  input_code = input(">")
+  key = Fernet.generate_key()
+  fernet = Fernet(key)
+  decrypted_code = fernet.decrypt(input_code).decode()
+  checking_username = True
+  i = 0
+  while True: #checking username
+    if decrypted_code[i] != "|":
+      username += decrypted_code[i]
+      i+=1
+    else:
+      i+=1
+      break
+  while True: #checking today_calories
+    temp = ""
+    if decrypted_code[i] != "|":
+      temp += decrypted_code[i]
+      i += 1
+    else:
+      i+=1
+      today_calories = int(temp)
+      break
+  while True: #checking today_fats
+    temp = ""
+    if decrypted_code[i] != "|":
+      temp += decrypted_code[i]
+      i += 1
+    else:
+      i+=1
+      today_fats = int(temp)
+      break
+  while True: #checking today_carbs
+    temp = ""
+    if decrypted_code[i] != "|":
+      temp += decrypted_code[i]
+      i += 1
+    else:
+      i+=1
+      today_carbs = int(temp)
+      break
+  while True: #checking today_proteins
+    temp = ""
+    if decrypted_code[i] != "|":
+      temp += decrypted_code[i]
+      i += 1
+    else:
+      i+=1
+      today_proteins = int(temp)
+      break
+  while True: #checking streak
+    temp = ""
+    if decrypted_code[i] != "|":
+      temp += decrypted_code[i]
+      i += 1
+    else:
+      i+=1
+      streak = int(temp)
+      break
+  for i in range(0,4): #checking today_streak_checked
+    temp = ""
+    temp += decrypted_code[i]
+    i += 1
+    if temp == "True":
+      today_streak_checked = True
+    else:
+      today_streak_checked = False
+  sPrint("User data successfully compiled!\n")
+  sPrint("Welcome back to Nutri_Helper," + username + "!")
+  save_code_entering = False
+      
+main = True
+while True:
+  while main:
+    sPrint("What would you like to do?\n")
+    print("<1> View your nutrition today")
+    print("<2> View your overall nutrition")
+    print("<3> Input nutrition facts")
+    print("<4> Exit")
+    input3 = int(input(">"))
+    if input3 == 1:
+      nut_today = True
+      break
+    elif input3 == 2:
+      overall_nut = True
+      break
+    elif input3 == 3:
+      input_nut = True
+      break
+    elif input3 == 4:
+      exiting = True
+      break
+    else:
+      sPrint("Please enter 1, 2, 3, or 4.")
+      continue
+  while nut_today:
+    clear()
+    sPrint("Let's look at how you're eating today!\n")
+    time.sleep(1)
+    print("Calories:", today_calories, "/2000")
+    print("Protein:", today_protein, "/", "60g")
+    print("Fats:", today_fats, "/44g-77g")
+    print("Carbohydrates:", today_carbs, "/225g-325g")
+    time.sleep(1)
+    sPrint("Here's what you should work on eating today...\n")
+    time.sleep(1)
+    if today_calories >= 2000:
+      sPrint("You have reached your recommended caloric intake today. Good job!\n")
+      today_calories_done = True
+      time.sleep(1)
+    else:
+      sPrint("You haven't reached your daily caloric intake yet!\n")
+      time.sleep(1)
+    if today_protein >= 60:
+      sPrint("You have reached your daily recommended protein! Good job!\n")
+      today_protein_done = True
+      time.sleep(1)
+    else:
+      sPrint("You haven't reached your daily recommended protein yet!\n")
+      time.sleep(1)
+      sPrint("Protein can be found in meat (beef, pork, chicken), beans, and peanut butter.\n")
+      time.sleep(1)
+    if today_fats >= 44:
+      sPrint("You have reached your daily recommended fat intake! Good job!\n")
+      today_fat_done = True
+      time.sleep(1)
+    else:
+      sPrint("You haven't reached your daily recommended fat intake yet!\n")
+      time.sleep(1)
+      sPrint("Fats can be found in dairy (yogurt, milk), eggs, and fish.\n")
+      time.sleep(1)
+    if today_carbs >= 225:
+      sPrint("You have reached your daily recommended carb intake! Good job!\n")
+      today_carbs_done = True
+      time.sleep(1)
+    else:
+      sPrint("You haven't reached your daily recommended carb intake yet!\n")
+      time.sleep(1)
+      sPrint("Carbs can be found in grains (bread pasta, pretzels), starches (peas, corn, potatoes), and sugars (candy, cakes, cookies).\n")
+      time.sleep(1)
+    if today_calories_done == True and today_carbs_done == True and today_protein_done == True and today_fat_done == True:
+      sPrint("You have met all of your daily requirements! Great job!\n")
+      if today_streak_checked == False:
+        streak += 1
+        today_streak_checked = True
+    sPrint("Keep working! Your health is important!")
+    time.sleep(1)
+    clear()
+    nut_today = False
+    main = True
+  while overall_nut:
+    clear()
+    sPrint("Let's look at your overall health!")
+    sPrint("You have met all of your daily requirements for the past", streak, "day(s).\n")
+    sPrint("Great job!\n")
+    overall_nut = False
+    main = True
+    
+  while input_nut:
+    clear()
+    sPrint("What food are you inputting?\n")
+    input4 = str(input(">"))
+    sPrint("Great! How many calories are in it?\n")
+    input4 = int(input(">"))
+    today_calories += input4
+    sPrint("And how much protein? (in grams)\n")
+    input4 = int(input(">"))
+    today_protein += input4
+    sPrint("And how many carbs? (in grams)\n")
+    input4 = int(input(">"))
+    today_carbs += input4
+    sPrint("And how many fats? (in grams)\n")
+    input4 = int(input(">"))
+    today_fats += input4
+    sPrint("Your food has been catalogued! You can view the changes in the \"today's nutrition\" section.")
+    time.sleep(1)
+    clear()
+    input_nut = False
+    main = True
+  while exiting:
+    bar = ["-","-","-","-","-","-","-","-","-","-"]
+    sPrint("Compiling user data...\n")
+    for i in range(0,10):
+      bar_print("[")
+      for x in range(0,10):
+        bar_print(bar[x])
+      bar_print("]")
+      time.sleep(0.3)
+      clear()
+      print("Compiling user data...")
+      bar[i] = "*"
+    unencrypted_key = str(username) + str(today_calories) + "|" + str(today_fats) + "|" + str(today_carbs) + "|" + str(today_protein) + "|" + str(streak) + "|" + str(today_streak_checked)
+    encrypted_Message = fernet.encrypt(unencrypted_key.encode())
+    clear()
+    sPrint("Compilation complete.\n")
+    time.sleep(1)
+    sPrint("Your key is:")
+    time.sleep(0.2)
+    print(encrypted_Message)
+    time.sleep(1)
+    sPrint("Enter this when reopening the program to log back into your account.")
+    time.sleep(0.5)
+    sPrint("Goodbye!")
+    closing = True
+    break
+  if closing == True:
+    break
