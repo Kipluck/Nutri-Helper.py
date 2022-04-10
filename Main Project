@@ -228,7 +228,7 @@ while True:
   while overall_nut:
     clear()
     sPrint("Let's look at your overall health!")
-    sPrint("You have met all of your daily requirements for the past", streak, "day(s).\n")
+    sPrint("You have met all of your daily requirements for the past " + streak + "day(s).\n")
     sPrint("Great job!\n")
     overall_nut = False
     main = True
